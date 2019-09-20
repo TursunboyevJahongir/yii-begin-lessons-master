@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use yii\rest\ActiveController;
 use yii\web\Controller;
+use yii\web\MethodNotAllowedHttpException;
 use yii\web\NotAcceptableHttpException;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -163,11 +164,20 @@ class NewsController extends Controller
      * @throws \yii\base\InvalidConfigException
      */
     public function actionApiDelete($id){
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         // agar son bo'lsa
         if(is_numeric($id)){
             // yangilikni o'chiramiz
            if(Yii::$app->request->isDelete){
-               $model = new NewsApiModel();
+               $model = NewsModel::findOne(['id' => $id]);
+               if ($model !== null) {
+                   $model->delete();
+                   return ['result' => 'ok'];
+               } else {
+                   throw new NotFoundHttpException();
+               }
+           } else {
+               throw new MethodNotAllowedHttpException();
            }
         }
     }
