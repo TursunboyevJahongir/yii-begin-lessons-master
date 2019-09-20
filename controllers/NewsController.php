@@ -163,7 +163,9 @@ class NewsController extends Controller
      * @throws \yii\base\InvalidConfigException
      */
     public function actionApiDelete($id){
+        // agar son bo'lsa
         if(is_numeric($id)){
+            // yangilikni o'chiramiz
            if(Yii::$app->request->isDelete){
                $model = new NewsApiModel();
            }
